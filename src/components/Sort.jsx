@@ -1,11 +1,17 @@
 import React from 'react'
 
-function Sort() {
-    const sortOptions = ['популярности', 'цене', 'алфавиту']
-    const [selectedSort, setSelectedSort] = React.useState(0)
+function Sort({ value, onClickSort }) {
+    const sortOptions = [
+        { name: 'популярности ↑', sortProperty: 'rating' },
+        { name: 'популярности ↓', sortProperty: '-rating' },
+        { name: 'цене ↑', sortProperty: 'price' },
+        { name: 'цене ↓', sortProperty: '-price' },
+        { name: 'алфавиту ↑', sortProperty: 'title' },
+        { name: 'алфавиту ↓', sortProperty: '-title' },
+    ]
     const [visibleSort, setVisibleSort] = React.useState(false)
-    const popupSortVisible = i => {
-        setSelectedSort(i)
+    const selectedSort = sortObj => {
+        onClickSort(sortObj)
         setVisibleSort(false)
     }
     return (
@@ -18,18 +24,18 @@ function Sort() {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={() => setVisibleSort(!visibleSort)}>{sortOptions[selectedSort]}</span>
+                <span onClick={() => setVisibleSort(!visibleSort)}>{value.name}</span>
             </div>
             {visibleSort && (
                 <div className="sort__popup">
                     <ul>
-                        {sortOptions.map((sortName, index) => (
+                        {sortOptions.map((sortObj, index) => (
                             <li
-                                onClick={() => popupSortVisible(index)}
+                                onClick={() => selectedSort(sortObj)}
                                 key={index}
-                                className={index === selectedSort ? 'active' : ''}
+                                className={sortObj.sortProperty === value.sortProperty ? 'active' : ''}
                             >
-                                {sortName}
+                                {sortObj.name}
                             </li>
                         ))}
                     </ul>
