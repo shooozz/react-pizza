@@ -83,3 +83,5 @@ const Home = ({ searchValue, setSearchValue }) => {
 }
 
 export default Home
+
+//Проверка настроек гит
