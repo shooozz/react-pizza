@@ -5,6 +5,8 @@ import PizzaBlock from '../components/PizzaBlock'
 import Skeleton from '../components/PizzaBlock/Skeleton'
 import Pagination from '../components/Pagination'
 
+console.log("Hello World")
+
 const Home = ({ searchValue, setSearchValue }) => {
     const [pizzasData, setPizzasData] = React.useState([])
     const [isLoaded, setIsLoaded] = React.useState(true)
