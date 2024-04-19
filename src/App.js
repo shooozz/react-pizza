@@ -1,27 +1,27 @@
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+
+import Home from './pages/Home'
+import NotFound from './components/NotFound'
 import Header from './components/Header'
-import Categories from './components/Categories'
-import Sort from './components/Sort'
-import PizzaBlock from './components/PizzaBlock'
-import pizzasData from './assets/pizzas.json'
+import Cart from './pages/Cart'
+// import pizzasData from './assets/pizzas.json'
 
 import './scss/app.scss'
 
 function App() {
+    const [searchValue, setSearchValue] = React.useState('')
+
     return (
         <div className="wrapper">
-            <Header />
+            <Header searchValue={searchValue} setSearchValue={setSearchValue} />
             <div className="content">
                 <div className="container">
-                    <div className="content__top">
-                        <Categories />
-                        <Sort />
-                    </div>
-                    <h2 className="content__title">Все пиццы</h2>
-                    <div className="content__items">
-                        {pizzasData.map(pizzaObj => (
-                            <PizzaBlock {...pizzaObj} />
-                        ))}
-                    </div>
+                    <Routes>
+                        <Route path="/" element={<Home searchValue={searchValue} setSearchValue={setSearchValue} />} />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
                 </div>
             </div>
         </div>
@@ -29,3 +29,7 @@ function App() {
 }
 
 export default App
+
+// AirTable
+// pat3n4HF2M6n8Yc7t.a2bf9f82332b5826eb455b6800df4dd44ce26d0777881c5352925e057aec86c0
+// appeSnv5U5vIOIJCq
