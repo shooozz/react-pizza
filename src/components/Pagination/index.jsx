@@ -15,7 +15,7 @@ const Pagination = ({ onChangePage, setIndexCategories }) => {
                 className={styles.root}
                 breakLabel="..."
                 nextLabel=">"
-                onPageChange={event => onChangePageHandler(event.selected + 1)}
+                onPageChange={event => onChangePageHandler(event.selected)}
                 pageRangeDisplayed={8}
                 pageCount={3}
                 previousLabel="<"
