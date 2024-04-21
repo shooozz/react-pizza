@@ -13,14 +13,14 @@ function App() {
     const [searchValue, setSearchValue] = React.useState('')
 
     return (
-        <div className="wrapper">
+        <div className='wrapper'>
             <Header searchValue={searchValue} setSearchValue={setSearchValue} />
-            <div className="content">
-                <div className="container">
+            <div className='content'>
+                <div className='container'>
                     <Routes>
-                        <Route path="/" element={<Home searchValue={searchValue} setSearchValue={setSearchValue} />} />
-                        <Route path="/cart" element={<Cart />} />
-                        <Route path="*" element={<NotFound />} />
+                        <Route path='/' element={<Home searchValue={searchValue} setSearchValue={setSearchValue} />} />
+                        <Route path='/cart' element={<Cart />} />
+                        <Route path='*' element={<NotFound />} />
                     </Routes>
                 </div>
             </div>
