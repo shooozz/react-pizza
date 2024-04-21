@@ -6,11 +6,11 @@
     ],
     "rules": {
         // "no-console": "warn",
-        "prefer-const": "error",
+        "prefer-const": "off",
         "quotes": ["warn", "single"],
         "jsx-quotes": ["warn", "prefer-single"],
         // "indent": ["warn", 4],
-        "max-len": ["error", {"code": 140}],
+        "max-len": ["error", {"code": 160}],
         "comma-dangle": ["off"],
         // "semi": ["off"],
         "import/order": ["warn", {
