@@ -9,8 +9,6 @@ export const offsetSlice = createSlice({
     initialState,
     reducers: {
         addOffset(state, action) {
-            console.log(state, 'STATE')
-            console.log(action, 'ACTION')
             state.offset.push(action.payload)
             // prevOffset => [...prevOffset, response]
         }

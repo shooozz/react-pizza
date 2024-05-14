@@ -17,8 +17,6 @@ import { addOffset } from '../redux/slices/offsetSlice'
 const Home = () => {
     const { offset } = useSelector(state => state.offset)
 
-    console.log(offset)
-
     const isSearch = React.useRef(false)
     const isMounted = React.useRef(false)
     const navigate = useNavigate()
