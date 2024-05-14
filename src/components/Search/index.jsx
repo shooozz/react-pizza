@@ -1,29 +1,39 @@
 import React from 'react'
+import debounce from 'lodash.debounce'
 
 import { SearchContext } from '../../App'
 
 import styles from './Search.module.scss'
 
 const Search = () => {
-    const { searchValue, setSearchValue } = React.useContext(SearchContext)
+    const [value, setValue] = React.useState('')
+    const { setSearchValue } = React.useContext(SearchContext)
+    const inputRef = React.useRef()
+
+    const onClickClear = () => {
+        setSearchValue('')
+        setValue('')
+        // document.querySelector('input').focus()
+        inputRef.current.focus()
+    }
+
+    const updateSearchValue = React.useCallback(
+        debounce(str => {
+            console.log(str)
+            setSearchValue(str)
+        }, 750),
+        []
+    )
+
+    const onChangeInput = event => {
+        setValue(event.target.value)
+        updateSearchValue(event.target.value)
+    }
 
     return (
         <div className={styles.root}>
-            <input
-                value={searchValue}
-                className={styles.input}
-                placeholder='Поиск пиццы ...'
-                onChange={event => setSearchValue(event.target.value)}
-            />
-            <svg
-                className={styles.icon}
-                baseProfile='tiny'
-                height='32px'
-                version='1.1'
-                viewBox='0 0 32 32'
-                width='32px'
-                xmlns='http://www.w3.org/2000/svg'
-            >
+            <input ref={inputRef} value={value} className={styles.input} placeholder='Поиск пиццы ...' onChange={event => onChangeInput(event)} />
+            <svg className={styles.icon} baseProfile='tiny' height='32px' version='1.1' viewBox='0 0 32 32' width='32px' xmlns='http://www.w3.org/2000/svg'>
                 <g id='Guides__x26__Forms' />
                 <g id='Icons'>
                     <path
@@ -33,8 +43,8 @@ const Search = () => {
                     />
                 </g>
             </svg>
-            {searchValue && (
-                <svg onClick={() => setSearchValue('')} className={styles.clearIcon} viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'>
+            {value && (
+                <svg onClick={onClickClear} className={styles.clearIcon} viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'>
                     <defs>
                         <style>{'.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}'}</style>
                     </defs>

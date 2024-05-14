@@ -18,6 +18,17 @@
         font-weight: 900;
         letter-spacing: 1%;
         margin-bottom: 20px;
+        text-wrap: nowrap;
+        overflow: hidden;
+        &:hover {
+            overflow: visible;
+        }
+        @media (max-width: 1060px) {
+            overflow: visible;
+        }
+        @media (max-width: 730px) {
+            overflow: visible;
+        }
     }
 
     &__selector {
