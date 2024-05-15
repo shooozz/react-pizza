@@ -6,7 +6,7 @@ import logoPizzas from '../assets/img/pizza-logo.svg'
 import Search from './Search'
 
 function Header() {
-    const { items, totalPrice } = useSelector(state => state.cart)
+    const { totalPrice, totalCount } = useSelector(state => state.cart)
 
     return (
         <div className='header'>
@@ -53,7 +53,7 @@ function Header() {
                                 strokeLinejoin='round'
                             />
                         </svg>
-                        <span>{items.length}</span>
+                        <span>{totalCount}</span>
                     </Link>
                 </div>
             </div>
