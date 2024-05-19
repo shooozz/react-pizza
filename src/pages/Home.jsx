@@ -65,7 +65,7 @@ const Home = () => {
             ? `filterByFormula=%7Bcategory%7D%3D${indexCategories}&sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}`
             : `sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}&pageSize=${pageSize}&offset=${pageCount ? offset[pageCount] : ''}`
 
-    const fetchPizzas = () => {
+    const fetchPizzas = async () => {
         setIsLoaded(false)
 
         // DELETE NEXT 8
@@ -77,37 +77,50 @@ const Home = () => {
             }
         }
 
-        axios({
-            url: `${searchValue ? `${url}?sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}` : `${url}?${categoryFetch}`}`,
-            headers: {
-                Authorization: `Bearer ${API_KEY}`
-            }
-        })
-            .then(response => {
-                responseHandler(response.data.records)
-                setIsLoaded(true)
-                // DELETE NEXT 3
-                if (!offsetLoaded) {
-                    offsetHandler(response.data.offset)
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching pizzas:', error) // Добавлено логирование ошибок
-            })
+        // axios({
+        //     url: `${searchValue ? `${url}?sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}` : `${url}?${categoryFetch}`}`,
+        //     headers: {
+        //         Authorization: `Bearer ${API_KEY}`
+        //     }
+        // })
+        //     .then(response => {
+        //         responseHandler(response.data.records)
+        //         setIsLoaded(true)
+        //         // DELETE NEXT 3
+        //         if (!offsetLoaded) {
+        //             offsetHandler(response.data.offset)
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.error('Error fetching pizzas:', error) // Добавлено логирование ошибок
+        //     })
 
+        const res = await axios.get(
+            searchValue ? `${url}?sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}` : `${url}?${categoryFetch}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${API_KEY}`
+                }
+            }
+        )
         const responseHandler = data => {
             setPizzasData(
                 data.map(pizzaData => {
-                    pizzaData.fields.types = JSON.parse(pizzaData.fields.types)
-                    pizzaData.fields.sizes = JSON.parse(pizzaData.fields.sizes)
                     return pizzaData.fields
                 })
             )
+        }
+        responseHandler(res.data.records)
+        setIsLoaded(true)
+        if (!offsetLoaded) {
+            offsetHandler(res.data.offset)
         }
     }
 
     React.useEffect(() => {
         if (!isSearch.current) {
+            fetchPizzas()
+        } else {
             fetchPizzas()
         }
         isSearch.current = false
