@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios'
 import qs from 'qs'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -11,24 +10,25 @@ import Skeleton from '../components/PizzaBlock/Skeleton'
 import Pagination from '../components/Pagination'
 import { SearchContext } from '../App'
 import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice'
+import { fetchPizzas } from '../redux/slices/pizzaSlice'
 
 import { addOffset } from '../redux/slices/offsetSlice'
 
 const Home = () => {
+    const dispatch = useDispatch()
+
     const { offset } = useSelector(state => state.offset)
+    const { items, status } = useSelector(state => state.pizza)
+
+    const { categoryId, sort, pageCount } = useSelector(state => state.filter)
 
     const isSearch = React.useRef(false)
     const isMounted = React.useRef(false)
     const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const { categoryId, sort, pageCount } = useSelector(state => state.filter)
     const sortType = sort.sortProperty
     const indexCategories = categoryId
     const { searchValue, setSearchValue } = React.useContext(SearchContext)
-    const [pizzasData, setPizzasData] = React.useState([])
-    const [isLoaded, setIsLoaded] = React.useState(false)
 
-    // DELETE NEXT 1
     const [offsetLoaded, setOffsetLoaded] = React.useState(false)
 
     const url = 'https://api.airtable.com/v0/appeSnv5U5vIOIJCq/reactPizza0'
@@ -65,10 +65,7 @@ const Home = () => {
             ? `filterByFormula=%7Bcategory%7D%3D${indexCategories}&sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}`
             : `sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}&pageSize=${pageSize}&offset=${pageCount ? offset[pageCount] : ''}`
 
-    const fetchPizzas = async () => {
-        setIsLoaded(false)
-
-        // DELETE NEXT 8
+    const getPizzas = async () => {
         const offsetHandler = response => {
             if (typeof response === 'undefined') {
                 setOffsetLoaded(true)
@@ -77,51 +74,13 @@ const Home = () => {
             }
         }
 
-        // axios({
-        //     url: `${searchValue ? `${url}?sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}` : `${url}?${categoryFetch}`}`,
-        //     headers: {
-        //         Authorization: `Bearer ${API_KEY}`
-        //     }
-        // })
-        //     .then(response => {
-        //         responseHandler(response.data.records)
-        //         setIsLoaded(true)
-        //         // DELETE NEXT 3
-        //         if (!offsetLoaded) {
-        //             offsetHandler(response.data.offset)
-        //         }
-        //     })
-        //     .catch(error => {
-        //         console.error('Error fetching pizzas:', error) // Добавлено логирование ошибок
-        //     })
-
-        const res = await axios.get(
-            searchValue ? `${url}?sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}` : `${url}?${categoryFetch}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${API_KEY}`
-                }
-            }
-        )
-        const responseHandler = data => {
-            setPizzasData(
-                data.map(pizzaData => {
-                    return pizzaData.fields
-                })
-            )
-        }
-        responseHandler(res.data.records)
-        setIsLoaded(true)
-        if (!offsetLoaded) {
-            offsetHandler(res.data.offset)
-        }
+        dispatch(fetchPizzas({ url, sortBy, sortOrder, searchValue, categoryFetch, API_KEY, offsetLoaded, offsetHandler }))
     }
-
     React.useEffect(() => {
         if (!isSearch.current) {
-            fetchPizzas()
+            getPizzas()
         } else {
-            fetchPizzas()
+            getPizzas()
         }
         isSearch.current = false
         window.scrollTo(0, 0)
@@ -144,10 +103,9 @@ const Home = () => {
             <Skeleton />
         </li>
     ))
-
-    const pizzas = pizzasData
-        .filter(pizzaObj => pizzaObj.title.toLowerCase().includes(searchValue.toLowerCase()))
-        .map(pizzaObj => <PizzaBlock {...pizzaObj} key={pizzaObj['id']} />)
+    const pizzas = items?.records
+        ?.filter(pizzaObj => pizzaObj.fields.title.toLowerCase().includes(searchValue.toLowerCase()))
+        .map(pizzaObj => <PizzaBlock {...pizzaObj.fields} key={pizzaObj.id} />)
 
     return (
         <>
@@ -156,7 +114,7 @@ const Home = () => {
                 <Sort />
             </div>
             <h2 className='content__title'>Все пиццы</h2>
-            <div className='content__items'>{isLoaded ? pizzas : skeletons}</div>
+            <div className='content__items'>{status === 'success' ? pizzas : skeletons}</div>
             <Pagination onChangePage={onChangePage} setIndexCategories={() => onChangeCategory(0)} />
         </>
     )

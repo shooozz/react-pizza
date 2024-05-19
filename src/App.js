@@ -5,7 +5,6 @@ import Home from './pages/Home'
 import NotFound from './components/NotFound'
 import Header from './components/Header'
 import Cart from './pages/Cart'
-// import pizzasData from './assets/pizzas.json'
 
 import './scss/app.scss'
 
