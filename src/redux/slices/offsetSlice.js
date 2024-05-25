@@ -17,4 +17,6 @@ export const offsetSlice = createSlice({
 
 export const { addOffset } = offsetSlice.actions
 
+export const selectOffset = state => state.offset
+
 export default offsetSlice.reducer

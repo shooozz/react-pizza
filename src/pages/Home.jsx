@@ -8,26 +8,24 @@ import Sort, { sortOptions } from '../components/Sort'
 import PizzaBlock from '../components/PizzaBlock'
 import Skeleton from '../components/PizzaBlock/Skeleton'
 import Pagination from '../components/Pagination'
-import { SearchContext } from '../App'
-import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice'
-import { fetchPizzas } from '../redux/slices/pizzaSlice'
+import { setCategoryId, setPageCount, setFilters, selectFilter, setSearchValue } from '../redux/slices/filterSlice'
+import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice'
 
-import { addOffset } from '../redux/slices/offsetSlice'
+import { addOffset, selectOffset } from '../redux/slices/offsetSlice'
 
 const Home = () => {
     const dispatch = useDispatch()
 
-    const { offset } = useSelector(state => state.offset)
-    const { items, status } = useSelector(state => state.pizza)
+    const { offset } = useSelector(selectOffset)
+    const { items, status } = useSelector(selectPizzaData)
 
-    const { categoryId, sort, pageCount } = useSelector(state => state.filter)
+    const { categoryId, sort, pageCount, searchValue } = useSelector(selectFilter)
 
     const isSearch = React.useRef(false)
     const isMounted = React.useRef(false)
     const navigate = useNavigate()
     const sortType = sort.sortProperty
     const indexCategories = categoryId
-    const { searchValue, setSearchValue } = React.useContext(SearchContext)
 
     const [offsetLoaded, setOffsetLoaded] = React.useState(false)
 
