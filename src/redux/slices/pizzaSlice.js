@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+import { url, API_KEY } from '../store'
+
 export const fetchPizzas = createAsyncThunk('pizza/fetchPizzasStatus', async (params, thunkApi) => {
-    const { url, sortBy, sortOrder, searchValue, categoryFetch, API_KEY } = params
+    const { sortBy, sortOrder, searchValue, categoryFetch } = params
     const { data } = await axios.get(
         searchValue ? `${url}?sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}` : `${url}?${categoryFetch}`,
         {

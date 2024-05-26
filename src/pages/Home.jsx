@@ -1,7 +1,9 @@
 import React from 'react'
 import qs from 'qs'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+
+import { pageSize } from '../redux/store'
 
 import Categories from '../components/Categories'
 import Sort, { sortOptions } from '../components/Sort'
@@ -28,10 +30,6 @@ const Home = () => {
     const indexCategories = categoryId
 
     const [offsetLoaded, setOffsetLoaded] = React.useState(false)
-
-    const url = 'https://api.airtable.com/v0/appeSnv5U5vIOIJCq/reactPizza0'
-    const API_KEY = 'pat3n4HF2M6n8Yc7t.a2bf9f82332b5826eb455b6800df4dd44ce26d0777881c5352925e057aec86c0'
-    const pageSize = 4
 
     const onChangeCategory = id => {
         dispatch(setCategoryId(id))
@@ -72,7 +70,7 @@ const Home = () => {
             }
         }
 
-        dispatch(fetchPizzas({ url, sortBy, sortOrder, searchValue, categoryFetch, API_KEY, offsetLoaded, offsetHandler }))
+        dispatch(fetchPizzas({ sortBy, sortOrder, searchValue, categoryFetch, offsetLoaded, offsetHandler }))
     }
     React.useEffect(() => {
         if (!isSearch.current) {
@@ -103,7 +101,11 @@ const Home = () => {
     ))
     const pizzas = items?.records
         ?.filter(pizzaObj => pizzaObj.fields.title.toLowerCase().includes(searchValue.toLowerCase()))
-        .map(pizzaObj => <PizzaBlock {...pizzaObj.fields} key={pizzaObj.id} />)
+        .map(pizzaObj => (
+            <Link key={pizzaObj.id} to={`/pizza/${pizzaObj.fields.id}`}>
+                <PizzaBlock {...pizzaObj.fields} />
+            </Link>
+        ))
 
     return (
         <>
