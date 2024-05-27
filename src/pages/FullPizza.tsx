@@ -4,8 +4,18 @@ import { useParams, useNavigate } from 'react-router-dom'
 
 import { API_KEY } from '../redux/store'
 
-const FullPizza = () => {
-    const [pizza, setPizza] = React.useState()
+const FullPizza: React.FC = () => {
+    const [pizza, setPizza] = React.useState<{
+        imageUrl: string
+        title: string
+        price: number
+    }>()
+    //  Следующий код мог быть задан как начальное состояние стейта
+    //     {
+    //     imageUrl: '',
+    //     title: '',
+    //     price: 0
+    // }
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -28,6 +38,7 @@ const FullPizza = () => {
         fetchPizza()
     }, [id])
 
+    // Т.к. начальное состояние undefined , нам нужно делать проверку ! ! !
     if (!pizza) {
         return <div>Loading...</div>
     }

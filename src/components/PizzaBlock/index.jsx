@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { addItem, selectCartItemById } from '../../redux/slices/cartSlice'
 
@@ -9,7 +10,6 @@ const typePizzaName = ['тонкое', 'традиционное']
 function PizzaBlock({ id, imageUrl, title, types, sizes, price, category }) {
     const dispatch = useDispatch()
     const cartItem = useSelector(selectCartItemById(id))
-
     const addedCount = cartItem ? cartItem.count : 0
 
     let [countPizzas, setCountPizzas] = React.useState(0)
@@ -29,11 +29,15 @@ function PizzaBlock({ id, imageUrl, title, types, sizes, price, category }) {
         dispatch(addItem(item))
     }
 
+    // console.log(types)
+
     return (
         <div className='pizza-block-wrapper'>
             <div className='pizza-block'>
-                <img className='pizza-block__image' src={imageUrl} alt='Pizza' />
-                <h4 className='pizza-block__title'>{title}</h4>
+                <Link key={id} to={`/pizza/${id}`}>
+                    <img className='pizza-block__image' src={imageUrl} alt='Pizza' />
+                    <h4 className='pizza-block__title'>{title}</h4>
+                </Link>
                 <div className='pizza-block__selector'>
                     <ul>
                         {types.map((typeId, index) => (

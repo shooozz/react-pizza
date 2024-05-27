@@ -1,17 +1,17 @@
 import React from 'react'
 import qs from 'qs'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { pageSize } from '../redux/store'
+import { setCategoryId, setPageCount, setFilters, selectFilter, setSearchValue } from '../redux/slices/filterSlice'
+import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice'
 
 import Categories from '../components/Categories'
 import Sort, { sortOptions } from '../components/Sort'
 import PizzaBlock from '../components/PizzaBlock'
 import Skeleton from '../components/PizzaBlock/Skeleton'
 import Pagination from '../components/Pagination'
-import { setCategoryId, setPageCount, setFilters, selectFilter, setSearchValue } from '../redux/slices/filterSlice'
-import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice'
 
 import { addOffset, selectOffset } from '../redux/slices/offsetSlice'
 
@@ -101,11 +101,7 @@ const Home = () => {
     ))
     const pizzas = items?.records
         ?.filter(pizzaObj => pizzaObj.fields.title.toLowerCase().includes(searchValue.toLowerCase()))
-        .map(pizzaObj => (
-            <Link key={pizzaObj.id} to={`/pizza/${pizzaObj.fields.id}`}>
-                <PizzaBlock {...pizzaObj.fields} />
-            </Link>
-        ))
+        .map(pizzaObj => <PizzaBlock key={pizzaObj.id} {...pizzaObj.fields} />)
 
     return (
         <>
