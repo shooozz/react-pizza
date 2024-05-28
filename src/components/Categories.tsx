@@ -1,17 +1,19 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+
+import { setSearchValue, setCategoryId } from '../redux/slices/filterSlice'
 
 type CategoriesProps = {
     value: number
-    onClickCategory: any
-    onChangeCategory: any
 }
 
-const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory, onChangeCategory }) => {
-    const categoriesList = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
+const categoriesList = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
+const Categories: React.FC<CategoriesProps> = ({ value }) => {
+    const dispatch = useDispatch()
 
     const onClickCategoryHandler = (index: number) => {
-        onClickCategory(index)
-        onChangeCategory()
+        dispatch(setCategoryId(index))
+        dispatch(setSearchValue(''))
     }
 
     return (

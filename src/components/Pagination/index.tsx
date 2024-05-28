@@ -4,14 +4,13 @@ import ReactPaginate from 'react-paginate'
 import styles from './Pagination.module.scss'
 
 type PaginationProps = {
-    onChangePage: any
-    setIndexCategories: any
+    onChangePage: (page: number) => void
 }
 
-const Pagination: React.FC<PaginationProps> = ({ onChangePage, setIndexCategories }) => {
+const Pagination: React.FC<PaginationProps> = ({ onChangePage }) => {
     const onChangePageHandler = (selectPageNumber: number) => {
         onChangePage(selectPageNumber)
-        setIndexCategories()
+        // setIndexCategories()
     }
 
     return (

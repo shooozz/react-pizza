@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { pageSize } from '../redux/store'
-import { setCategoryId, setPageCount, setFilters, selectFilter, setSearchValue } from '../redux/slices/filterSlice'
+import { setPageCount, setFilters, selectFilter } from '../redux/slices/filterSlice'
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice'
 
 import Categories from '../components/Categories'
@@ -16,23 +16,40 @@ import Pagination from '../components/Pagination'
 import { addOffset, selectOffset } from '../redux/slices/offsetSlice'
 
 const Home: React.FC = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const { offset } = useSelector(selectOffset)
     const { items, status } = useSelector(selectPizzaData)
-
     const { categoryId, sort, pageCount, searchValue } = useSelector(selectFilter)
 
     const isSearch = React.useRef(false)
     const isMounted = React.useRef(false)
-    const navigate = useNavigate()
-    const sortType = sort.sortProperty
-    const indexCategories = categoryId
 
+    const sortType = sort.sortProperty
     const [offsetLoaded, setOffsetLoaded] = React.useState(false)
 
-    const onChangeCategory = (idx: number) => {
-        dispatch(setCategoryId(idx))
+    const sortOrder = sortType.includes('-') ? 'desc' : 'asc'
+    const sortBy = sortType.replace('-', '')
+
+    const categoryFetch =
+        categoryId > 0
+            ? `filterByFormula=%7Bcategory%7D%3D${categoryId}&sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}`
+            : `sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}&pageSize=${pageSize}&offset=${pageCount ? offset[pageCount] : ''}`
+    const getPizzas = async () => {
+        // const offsetHandler = (response: any) => {
+        //     console.log(response)
+        //     if (typeof response === 'undefined') {
+        //         setOffsetLoaded(true)
+        //     } else {
+        //         dispatch(addOffset(response))
+        //     }
+        // }
+
+        dispatch(
+            // @ts-ignore
+            fetchPizzas({ sortBy, sortOrder, searchValue, categoryFetch, offsetLoaded })
+        )
     }
 
     const onChangePage = (page: number) => {
@@ -52,29 +69,6 @@ const Home: React.FC = () => {
             isSearch.current = true
         }
     }, [dispatch])
-
-    const sortOrder = sortType.includes('-') ? 'desc' : 'asc'
-    const sortBy = sortType.replace('-', '')
-
-    const categoryFetch =
-        indexCategories > 0
-            ? `filterByFormula=%7Bcategory%7D%3D${indexCategories}&sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}`
-            : `sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}&pageSize=${pageSize}&offset=${pageCount ? offset[pageCount] : ''}`
-
-    const getPizzas = async () => {
-        const offsetHandler = (response: any) => {
-            if (typeof response === 'undefined') {
-                setOffsetLoaded(true)
-            } else {
-                dispatch(addOffset(response))
-            }
-        }
-
-        dispatch(
-            // @ts-ignore
-            fetchPizzas({ sortBy, sortOrder, searchValue, categoryFetch, offsetLoaded, offsetHandler })
-        )
-    }
     React.useEffect(() => {
         if (!isSearch.current) {
             getPizzas()
@@ -83,7 +77,7 @@ const Home: React.FC = () => {
         }
         isSearch.current = false
         window.scrollTo(0, 0)
-    }, [indexCategories, sortType, searchValue, pageCount])
+    }, [categoryId, sortType, searchValue, pageCount])
 
     React.useEffect(() => {
         if (isMounted.current) {
@@ -109,12 +103,12 @@ const Home: React.FC = () => {
     return (
         <>
             <div className='content__top'>
-                <Categories value={indexCategories} onClickCategory={onChangeCategory} onChangeCategory={() => setSearchValue('')} />
+                <Categories value={categoryId} />
                 <Sort />
             </div>
             <h2 className='content__title'>Все пиццы</h2>
             <div className='content__items'>{status === 'success' ? pizzas : skeletons}</div>
-            <Pagination onChangePage={onChangePage} setIndexCategories={() => onChangeCategory(0)} />
+            <Pagination onChangePage={onChangePage} />
         </>
     )
 }

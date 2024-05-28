@@ -2,41 +2,41 @@ import React from 'react'
 // @ts-ignore
 import debounce from 'lodash.debounce'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { setSearchValue } from '../../redux/slices/filterSlice'
+import { setSearchValue, selectFilter, setCategoryId } from '../../redux/slices/filterSlice'
 
 import styles from './Search.module.scss'
 
 const Search: React.FC = () => {
     const dispatch = useDispatch()
+    const { searchValue } = useSelector(selectFilter)
 
-    const [value, setValue] = React.useState('')
     const inputRef = React.useRef<HTMLInputElement>(null)
 
-    const onClickClear = () => {
+    const onClickClear = (event: React.MouseEvent<SVGSVGElement>) => {
+        console.log(event)
         dispatch(setSearchValue(''))
-        setValue('')
+        dispatch(setCategoryId(0))
         // document.querySelector('input').focus()
         inputRef.current?.focus()
     }
 
     const updateSearchValue = React.useCallback(
         debounce((str: string) => {
-            console.log(str)
             dispatch(setSearchValue(str))
         }, 500),
         []
     )
 
-    const onChangeInput = (event: any) => {
-        setValue(event.target.value)
+    const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setSearchValue(event.target.value))
         updateSearchValue(event.target.value)
     }
 
     return (
         <div className={styles.root}>
-            <input ref={inputRef} value={value} className={styles.input} placeholder='Поиск пиццы ...' onChange={event => onChangeInput(event)} />
+            <input ref={inputRef} value={searchValue} className={styles.input} placeholder='Поиск пиццы ...' onChange={event => onChangeInput(event)} />
             <svg className={styles.icon} baseProfile='tiny' height='32px' version='1.1' viewBox='0 0 32 32' width='32px' xmlns='http://www.w3.org/2000/svg'>
                 <g id='Guides__x26__Forms' />
                 <g id='Icons'>
@@ -47,7 +47,7 @@ const Search: React.FC = () => {
                     />
                 </g>
             </svg>
-            {value && (
+            {searchValue && (
                 <svg onClick={onClickClear} className={styles.clearIcon} viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'>
                     <defs>
                         <style>{'.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}'}</style>
