@@ -15,7 +15,7 @@ import Pagination from '../components/Pagination'
 
 import { addOffset, selectOffset } from '../redux/slices/offsetSlice'
 
-const Home = () => {
+const Home: React.FC = () => {
     const dispatch = useDispatch()
 
     const { offset } = useSelector(selectOffset)
@@ -31,12 +31,12 @@ const Home = () => {
 
     const [offsetLoaded, setOffsetLoaded] = React.useState(false)
 
-    const onChangeCategory = id => {
-        dispatch(setCategoryId(id))
+    const onChangeCategory = (idx: number) => {
+        dispatch(setCategoryId(idx))
     }
 
-    const onChangePage = number => {
-        dispatch(setPageCount(number))
+    const onChangePage = (page: number) => {
+        dispatch(setPageCount(page))
     }
 
     React.useEffect(() => {
@@ -62,7 +62,7 @@ const Home = () => {
             : `sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}&pageSize=${pageSize}&offset=${pageCount ? offset[pageCount] : ''}`
 
     const getPizzas = async () => {
-        const offsetHandler = response => {
+        const offsetHandler = (response: any) => {
             if (typeof response === 'undefined') {
                 setOffsetLoaded(true)
             } else {
@@ -70,7 +70,10 @@ const Home = () => {
             }
         }
 
-        dispatch(fetchPizzas({ sortBy, sortOrder, searchValue, categoryFetch, offsetLoaded, offsetHandler }))
+        dispatch(
+            // @ts-ignore
+            fetchPizzas({ sortBy, sortOrder, searchValue, categoryFetch, offsetLoaded, offsetHandler })
+        )
     }
     React.useEffect(() => {
         if (!isSearch.current) {
@@ -100,8 +103,8 @@ const Home = () => {
         </li>
     ))
     const pizzas = items?.records
-        ?.filter(pizzaObj => pizzaObj.fields.title.toLowerCase().includes(searchValue.toLowerCase()))
-        .map(pizzaObj => <PizzaBlock key={pizzaObj.id} {...pizzaObj.fields} />)
+        ?.filter((pizzaObj: any) => pizzaObj.fields.title.toLowerCase().includes(searchValue.toLowerCase()))
+        .map((pizzaObj: any) => <PizzaBlock key={pizzaObj.id} {...pizzaObj.fields} />)
 
     return (
         <>

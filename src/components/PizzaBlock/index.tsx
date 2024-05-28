@@ -7,7 +7,16 @@ import { addItem, selectCartItemById } from '../../redux/slices/cartSlice'
 
 const typePizzaName = ['тонкое', 'традиционное']
 
-function PizzaBlock({ id, imageUrl, title, types, sizes, price, category }) {
+type PizzaBlockProps = {
+    id: string
+    imageUrl: string
+    title: string
+    types: number[]
+    sizes: number[]
+    price: number
+}
+
+const PizzaBlock: React.FC<PizzaBlockProps> = ({ id, imageUrl, title, types, sizes, price }) => {
     const dispatch = useDispatch()
     const cartItem = useSelector(selectCartItemById(id))
     const addedCount = cartItem ? cartItem.count : 0

@@ -3,8 +3,13 @@ import ReactPaginate from 'react-paginate'
 
 import styles from './Pagination.module.scss'
 
-const Pagination = ({ onChangePage, setIndexCategories }) => {
-    const onChangePageHandler = selectPageNumber => {
+type PaginationProps = {
+    onChangePage: any
+    setIndexCategories: any
+}
+
+const Pagination: React.FC<PaginationProps> = ({ onChangePage, setIndexCategories }) => {
+    const onChangePageHandler = (selectPageNumber: number) => {
         onChangePage(selectPageNumber)
         setIndexCategories()
     }
@@ -19,7 +24,6 @@ const Pagination = ({ onChangePage, setIndexCategories }) => {
                 pageRangeDisplayed={8}
                 pageCount={3}
                 previousLabel='<'
-                renderOnZeroPageCount={null}
             />
         </>
     )

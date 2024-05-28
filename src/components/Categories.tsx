@@ -1,9 +1,15 @@
 import React from 'react'
 
-function Categories({ value, onClickCategory, onChangeCategory }) {
+type CategoriesProps = {
+    value: number
+    onClickCategory: any
+    onChangeCategory: any
+}
+
+const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory, onChangeCategory }) => {
     const categoriesList = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
 
-    const onClickCategoryHandler = index => {
+    const onClickCategoryHandler = (index: number) => {
         onClickCategory(index)
         onChangeCategory()
     }
