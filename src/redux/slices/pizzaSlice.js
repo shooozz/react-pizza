@@ -4,15 +4,17 @@ import axios from 'axios'
 import { url, API_KEY } from '../store'
 
 export const fetchPizzas = createAsyncThunk('pizza/fetchPizzasStatus', async (params, thunkApi) => {
+    // const state = thunkApi.getState()
+    // const { categoryId } = state.filter
+    // console.log(state)
     const { sortBy, sortOrder, searchValue, categoryFetch } = params
-    const { data } = await axios.get(
-        searchValue ? `${url}?sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}` : `${url}?${categoryFetch}`,
-        {
-            headers: {
-                Authorization: `Bearer ${API_KEY}`
-            }
+    const fetchSearch = `${url}?sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}`
+
+    const { data } = await axios.get(searchValue ? fetchSearch : `${url}?${categoryFetch}`, {
+        headers: {
+            Authorization: `Bearer ${API_KEY}`
         }
-    )
+    })
     return data
 })
 

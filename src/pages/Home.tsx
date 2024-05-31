@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { pageSize } from '../redux/store'
+
 import { setPageCount, setFilters, selectFilter } from '../redux/slices/filterSlice'
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice'
 
@@ -12,49 +13,53 @@ import Sort, { sortOptions } from '../components/Sort'
 import PizzaBlock from '../components/PizzaBlock'
 import Skeleton from '../components/PizzaBlock/Skeleton'
 import Pagination from '../components/Pagination'
-
-import { addOffset, selectOffset } from '../redux/slices/offsetSlice'
+import { fetchOffset, selectOffset, addCount } from '../redux/slices/offsetSlice'
 
 const Home: React.FC = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const { offset } = useSelector(selectOffset)
     const { items, status } = useSelector(selectPizzaData)
     const { categoryId, sort, pageCount, searchValue } = useSelector(selectFilter)
+    const { offset } = useSelector(selectOffset)
+    // console.log(offset)
 
     const isSearch = React.useRef(false)
     const isMounted = React.useRef(false)
 
     const sortType = sort.sortProperty
-    const [offsetLoaded, setOffsetLoaded] = React.useState(false)
 
     const sortOrder = sortType.includes('-') ? 'desc' : 'asc'
     const sortBy = sortType.replace('-', '')
+    const sortUrl = `&sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}`
 
-    const categoryFetch =
-        categoryId > 0
-            ? `filterByFormula=%7Bcategory%7D%3D${categoryId}&sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}`
-            : `sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}&pageSize=${pageSize}&offset=${pageCount ? offset[pageCount] : ''}`
+    const fetchByCategoryId = `filterByFormula=%7Bcategory%7D%3D${categoryId}${sortUrl}`
+    // const idkCount = offset[3] ? 4 : 3
+    const fetchBySortAndPage = `${sortUrl}&pageSize=${pageSize}&offset=${offset[pageCount === 2 ? 5 : pageCount]}`
+
+    const categoryFetch = categoryId > 0 ? fetchByCategoryId : fetchBySortAndPage
+
     const getPizzas = async () => {
-        // const offsetHandler = (response: any) => {
-        //     console.log(response)
-        //     if (typeof response === 'undefined') {
-        //         setOffsetLoaded(true)
-        //     } else {
-        //         dispatch(addOffset(response))
-        //     }
-        // }
-
         dispatch(
             // @ts-ignore
-            fetchPizzas({ sortBy, sortOrder, searchValue, categoryFetch, offsetLoaded })
+            fetchPizzas({ sortBy, sortOrder, searchValue, categoryFetch })
         )
     }
 
     const onChangePage = (page: number) => {
         dispatch(setPageCount(page))
     }
+
+    React.useEffect(() => {
+        let tempCount = 0
+        while (tempCount < 4) {
+            tempCount++
+            dispatch(
+                // @ts-ignore
+                fetchOffset()
+            )
+        }
+    }, [])
 
     React.useEffect(() => {
         if (window.location.search) {

@@ -33,7 +33,7 @@ const Sort: React.FC = () => {
             const _event = event as MouseEvent & {
                 path: Node[]
             }
-            if (sortRef.current && !event.composedPath().includes(sortRef.current)) {
+            if (sortRef.current && !_event.composedPath().includes(sortRef.current)) {
                 setVisibleSort(false)
             }
         }
