@@ -1,23 +1,25 @@
 import React from 'react'
 import qs from 'qs'
 import { useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import { pageSize } from '../redux/store'
+import { pageSize, useAppDispatch } from '../redux/store'
 
-import { setPageCount, setFilters, selectFilter } from '../redux/slices/filterSlice'
-import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice'
+import { setPageCount, setFilters, selectFilter, SearchPizzaParams } from '../redux/slices/filterSlice'
+import { FetchPizzasArgs, fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice'
 
 import Categories from '../components/Categories'
-import Sort, { sortOptions } from '../components/Sort'
+import SortPopup, { sortOptions } from '../components/Sort'
 import PizzaBlock from '../components/PizzaBlock'
 import Skeleton from '../components/PizzaBlock/Skeleton'
 import Pagination from '../components/Pagination'
-import { fetchOffset, selectOffset, addCount } from '../redux/slices/offsetSlice'
+import { fetchOffset, selectOffset } from '../redux/slices/offsetSlice'
+
+let tempCount = 0
 
 const Home: React.FC = () => {
     const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const { items, status } = useSelector(selectPizzaData)
     const { categoryId, sort, pageCount, searchValue } = useSelector(selectFilter)
@@ -35,7 +37,7 @@ const Home: React.FC = () => {
 
     const fetchByCategoryId = `filterByFormula=%7Bcategory%7D%3D${categoryId}${sortUrl}`
     // const idkCount = offset[3] ? 4 : 3
-    const fetchBySortAndPage = `${sortUrl}&pageSize=${pageSize}&offset=${offset[pageCount === 2 ? 5 : pageCount]}`
+    const fetchBySortAndPage = `${sortUrl}&pageSize=${pageSize}&offset=${offset[pageCount]}`
 
     const categoryFetch = categoryId > 0 ? fetchByCategoryId : fetchBySortAndPage
 
@@ -50,30 +52,32 @@ const Home: React.FC = () => {
         dispatch(setPageCount(page))
     }
 
-    React.useEffect(() => {
-        let tempCount = 0
-        while (tempCount < 4) {
-            tempCount++
-            dispatch(
-                // @ts-ignore
-                fetchOffset()
-            )
-        }
-    }, [])
+    // React.useEffect(() => {
+    //     while (tempCount < 3) {
+    //         tempCount++
+    //         dispatch(
+    //             // @ts-ignore
+    //             fetchOffset()
+    //         )
+    //     }
+    // }, [])
 
-    React.useEffect(() => {
-        if (window.location.search) {
-            const params = qs.parse(window.location.search.substring(1))
-            const sort = sortOptions.find(obj => obj.sortProperty === params.sortProperty)
-            dispatch(
-                setFilters({
-                    ...params,
-                    sort
-                })
-            )
-            isSearch.current = true
-        }
-    }, [dispatch])
+    // React.useEffect(() => {
+    //     if (window.location.search) {
+    //         const params = qs.parse(window.location.search.substring(1)) as unknown as SearchPizzaParams
+    //         const sort = sortOptions.find(obj => obj.sortProperty === params.sortBy)
+    //         console.log(params)
+    //         dispatch(
+    //             setFilters({
+    //                 searchValue: params.search,
+    //                 categoryId: Number(params.category),
+    //                 pageCount: Number(params.currentPage),
+    //                 sort: sort || sortOptions[0]
+    //             })
+    //         )
+    //         isSearch.current = true
+    //     }
+    // }, [dispatch])
     React.useEffect(() => {
         if (!isSearch.current) {
             getPizzas()
@@ -84,24 +88,24 @@ const Home: React.FC = () => {
         window.scrollTo(0, 0)
     }, [categoryId, sortType, searchValue, pageCount])
 
-    React.useEffect(() => {
-        if (isMounted.current) {
-            const queryString = qs.stringify({
-                sortProperty: sort.sortProperty,
-                categoryId,
-                pageCount
-            })
-            navigate(`?${queryString}`)
-        }
-        isMounted.current = true
-    }, [categoryId, sort.sortProperty, pageCount, navigate])
+    // React.useEffect(() => {
+    //     if (isMounted.current) {
+    //         const queryString = qs.stringify({
+    //             sortProperty: sort.sortProperty,
+    //             categoryId,
+    //             pageCount
+    //         })
+    //         navigate(`?${queryString}`)
+    //     }
+    //     isMounted.current = true
+    // }, [categoryId, sort.sortProperty, pageCount, navigate])
 
     const skeletons = [...new Array(4)].map((_, index) => (
         <li key={index}>
             <Skeleton />
         </li>
     ))
-    const pizzas = items?.records
+    const pizzas = items
         ?.filter((pizzaObj: any) => pizzaObj.fields.title.toLowerCase().includes(searchValue.toLowerCase()))
         .map((pizzaObj: any) => <PizzaBlock key={pizzaObj.id} {...pizzaObj.fields} />)
 
@@ -109,7 +113,7 @@ const Home: React.FC = () => {
         <>
             <div className='content__top'>
                 <Categories value={categoryId} />
-                <Sort />
+                <SortPopup value={sort} />
             </div>
             <h2 className='content__title'>Все пиццы</h2>
             <div className='content__items'>{status === 'success' ? pizzas : skeletons}</div>

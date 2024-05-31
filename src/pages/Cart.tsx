@@ -87,8 +87,9 @@ const Cart: React.FC = () => {
                 </div>
             </div>
             <div className='content__items'>
-                {items.map((item: ItemPizzaCart) => (
-                    <CartItem key={item.id} {...item} {...totalPrice} {...totalCount} />
+                {items.map(item => (
+                    // console.log(item)
+                    <CartItem key={item.id} {...item} {...(totalPrice as {})} {...(totalCount as {})} />
                 ))}
             </div>
             <div className='cart__bottom'>

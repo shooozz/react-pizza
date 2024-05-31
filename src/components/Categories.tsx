@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+// import { useWhyDidYouUpdate } from 'ahooks'
 
 import { setSearchValue, setCategoryId } from '../redux/slices/filterSlice'
 
@@ -8,7 +9,8 @@ type CategoriesProps = {
 }
 
 const categoriesList = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
-const Categories: React.FC<CategoriesProps> = ({ value }) => {
+const Categories: React.FC<CategoriesProps> = React.memo(({ value }) => {
+    // useWhyDidYouUpdate('Categories', { value })
     const dispatch = useDispatch()
 
     const onClickCategoryHandler = (index: number) => {
@@ -27,6 +29,6 @@ const Categories: React.FC<CategoriesProps> = ({ value }) => {
             </ul>
         </div>
     )
-}
+})
 
 export default Categories

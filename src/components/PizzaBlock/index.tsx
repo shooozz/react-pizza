@@ -3,7 +3,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { addItem, selectCartItemById } from '../../redux/slices/cartSlice'
+import { CartItemState, addItem, selectCartItemById } from '../../redux/slices/cartSlice'
 
 const typePizzaName = ['тонкое', 'традиционное']
 
@@ -18,7 +18,7 @@ type PizzaBlockProps = {
 
 const PizzaBlock: React.FC<PizzaBlockProps> = ({ id, imageUrl, title, types, sizes, price }) => {
     const dispatch = useDispatch()
-    const cartItem = useSelector(selectCartItemById(id))
+    const cartItem = useSelector(selectCartItemById(Number(id)))
     const addedCount = cartItem ? cartItem.count : 0
 
     let [countPizzas, setCountPizzas] = React.useState(0)
@@ -26,13 +26,14 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({ id, imageUrl, title, types, siz
     let [activeSizePizza, setActiveSizePizza] = React.useState(0)
 
     const onClickAdd = () => {
-        const item = {
+        const item: CartItemState = {
             id,
             title,
             imageUrl,
             price,
             type: typePizzaName[activeTypePizza],
-            sizes: sizes[activeSizePizza]
+            sizes: sizes[activeSizePizza],
+            count: 0
         }
         setCountPizzas(++countPizzas)
         dispatch(addItem(item))
