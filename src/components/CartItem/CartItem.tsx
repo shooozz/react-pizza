@@ -1,7 +1,8 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
-import { CartItemState, addItem, minusItem, removeItem } from '../../redux/slices/cartSlice'
+import { addItem, minusItem, removeItem } from '../../redux/cart/slice'
+import { CartItemState } from '../../redux/cart/types'
 
 const CartItem: React.FC<CartItemState> = ({ id, title, price, count, type, imageUrl, sizes }) => {
     const dispatch = useDispatch()

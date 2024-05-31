@@ -5,8 +5,10 @@ import { useSelector } from 'react-redux'
 
 import { pageSize, useAppDispatch } from '../redux/store'
 
-import { setPageCount, setFilters, selectFilter, SearchPizzaParams } from '../redux/slices/filterSlice'
-import { FetchPizzasArgs, fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice'
+import { setPageCount } from '../redux/filter/slice'
+import { selectFilter } from '../redux/filter/selector'
+import { fetchPizzas } from '../redux/pizza/slice'
+import { selectPizzaData } from '../redux/pizza/selector'
 
 import Categories from '../components/Categories'
 import SortPopup, { sortOptions } from '../components/Sort'

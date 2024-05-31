@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 // import { useWhyDidYouUpdate } from 'ahooks'
 
-import { setSearchValue, setCategoryId } from '../redux/slices/filterSlice'
+import { setSearchValue, setCategoryId } from '../redux/filter/slice'
 
 type CategoriesProps = {
     value: number

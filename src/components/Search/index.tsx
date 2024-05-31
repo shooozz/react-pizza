@@ -4,7 +4,8 @@ import debounce from 'lodash.debounce'
 
 import { useDispatch, useSelector } from 'react-redux'
 
-import { setSearchValue, selectFilter, setCategoryId } from '../../redux/slices/filterSlice'
+import { setSearchValue, setCategoryId } from '../../redux/filter/slice'
+import { selectFilter } from '../../redux/filter/selector'
 
 import styles from './Search.module.scss'
 
