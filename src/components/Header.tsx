@@ -3,11 +3,12 @@ import { Link, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import logoPizzas from '../assets/img/pizza-logo.svg'
+
 import { selectCart } from '../redux/cart/selector'
 
-import Search from './Search'
+import { Search } from './index'
 
-function Header() {
+const Header: React.FC = () => {
     const { totalPrice, totalCount, items } = useSelector(selectCart)
     const isMounted = React.useRef(false)
 

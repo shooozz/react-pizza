@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 
 import { API_KEY } from '../redux/store'
 
@@ -52,6 +52,10 @@ const FullPizza: React.FC = () => {
                 illo debitis dolore.
             </p>
             <h4>{pizza.price} RUB</h4>
+
+            <Link to='/' className='button button--black'>
+                <span>Вернуться назад</span>
+            </Link>
         </div>
     )
 }

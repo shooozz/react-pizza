@@ -9,13 +9,9 @@ import { setPageCount } from '../redux/filter/slice'
 import { selectFilter } from '../redux/filter/selector'
 import { fetchPizzas } from '../redux/pizza/slice'
 import { selectPizzaData } from '../redux/pizza/selector'
-
-import Categories from '../components/Categories'
-import SortPopup, { sortOptions } from '../components/Sort'
-import PizzaBlock from '../components/PizzaBlock'
-import Skeleton from '../components/PizzaBlock/Skeleton'
-import Pagination from '../components/Pagination'
 import { fetchOffset, selectOffset } from '../redux/slices/offsetSlice'
+
+import { Categories, SortPopup, PizzaBlock, Skeleton, Pagination } from '../components/index'
 
 let tempCount = 0
 
