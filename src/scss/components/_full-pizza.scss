@@ -1,0 +1,59 @@
+.full-pizza {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding: 50px;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 30px;
+    &__title {
+        margin-right: 100px;
+        h2 {
+            display: flex;
+            justify-content: center;
+        }
+    }
+    &__subtitle {
+        text-align: center;
+        h4 {
+            padding: 20px 0;
+        }
+        p {
+            text-align: justify;
+        }
+        a {
+            justify-content: center;
+        }
+    }
+}
+
+@media (max-width: 1260px) {
+    .container {
+        width: 100% !important;
+        margin: 0 auto;
+    }
+    .full-pizza {
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        &__title {
+            margin-right: 0px;
+            h2 {
+                display: none;
+            }
+        }
+        &__subtitle {
+            text-align: center;
+            h4 {
+                padding: 20px 0;
+            }
+            p {
+                text-align: justify;
+            }
+            a {
+                justify-content: center;
+            }
+        }
+    }
+}

@@ -1,41 +1,41 @@
 .root {
-  position: relative;
+    position: relative;
 }
 
 .input {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 12px 20px;
-  padding-left: 32px;
-  width: 300px;
-  border-radius: 10px;
-  font-size: 18px;
-  transition: all 0.15s ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 12px 20px;
+    padding-left: 32px;
+    width: 300px;
+    border-radius: 10px;
+    font-size: 18px;
+    transition: all 0.15s ease-in-out;
 }
 .input:focus {
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  width: 320px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    width: 320px;
 }
 
 .icon {
-  width: 32px;
-  height: 32px;
-  opacity: 0.3;
-  position: absolute;
-  left: 5px;
-  top: 4px;
+    width: 32px;
+    height: 32px;
+    opacity: 0.3;
+    position: absolute;
+    left: 5px;
+    top: 4px;
 }
 
 .clearIcon {
-  width: 24px;
-  opacity: 0.3;
-  position: absolute;
-  right: 10px;
-  height: 40px;
-  cursor: pointer;
-  transition: all 0.15s ease-in-out;
+    width: 24px;
+    opacity: 0.3;
+    position: absolute;
+    right: 10px;
+    height: 40px;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
 }
 .clearIcon:hover {
-  opacity: 0.5;
-  width: 28px;
-  height: 44px;
-}/*# sourceMappingURL=Search.module.css.map */
+    opacity: 0.5;
+    width: 28px;
+    height: 44px;
+} /*# sourceMappingURL=Search.module.css.map */
