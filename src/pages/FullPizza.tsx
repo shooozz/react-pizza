@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 
 import { API_KEY } from '../redux/store'
 
@@ -43,15 +43,23 @@ const FullPizza: React.FC = () => {
         return <div>Loading...</div>
     }
     return (
-        <div className='container'>
-            <img src={pizza.imageUrl} alt={pizza.title} />
-            <h2>{pizza.title}</h2>
-            <p>
-                <b>{pizza.title}</b> THE BEST and here must be description. Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis facere
-                consequuntur dolorem asperiores, natus laborum quod. Consectetur ipsa alias natus, consequatur placeat, eius, harum quam laudantium perspiciatis
-                illo debitis dolore.
-            </p>
-            <h4>{pizza.price} RUB</h4>
+        <div className='container full-pizza'>
+            <div className='full-pizza__title'>
+                <img src={pizza.imageUrl} alt={pizza.title} />
+                <h2>{pizza.title}</h2>
+            </div>
+            <div className='full-pizza__subtitle'>
+                <p>
+                    <b>{pizza.title}</b> THE BEST and here must be description. Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis facere
+                    consequuntur dolorem asperiores, natus laborum quod. Consectetur ipsa alias natus, consequatur placeat, eius, harum quam laudantium
+                    perspiciatis illo debitis dolore.
+                </p>
+                <h4>{pizza.price} RUB</h4>
+
+                <Link to='/' className='button button--black'>
+                    <span>Вернуться назад</span>
+                </Link>
+            </div>
         </div>
     )
 }

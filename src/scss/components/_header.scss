@@ -11,6 +11,9 @@
 
         @media (max-width: 645px) {
             flex-direction: column;
+            .header__title {
+                margin: 20px 0;
+            }
         }
     }
 

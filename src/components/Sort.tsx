@@ -1,25 +1,29 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
-import { selectSort, setSort } from '../redux/slices/filterSlice'
+import { setSort } from '../redux/filter/slice'
+import { SortPropertyEnum, SortState } from '../redux/filter/types'
 
 type sortOptionsItem = {
     name: string
-    sortProperty: string
+    sortProperty: SortPropertyEnum
+}
+
+type SortPopupProps = {
+    value: SortState
 }
 
 export const sortOptions: sortOptionsItem[] = [
-    { name: 'популярности ↑', sortProperty: 'rating' },
-    { name: 'популярности ↓', sortProperty: '-rating' },
-    { name: 'цене ↑', sortProperty: 'price' },
-    { name: 'цене ↓', sortProperty: '-price' },
-    { name: 'алфавиту ↑', sortProperty: 'title' },
-    { name: 'алфавиту ↓', sortProperty: '-title' }
+    { name: 'популярности ↑', sortProperty: SortPropertyEnum.RATING_DESC },
+    { name: 'популярности ↓', sortProperty: SortPropertyEnum.RATING_ASC },
+    { name: 'цене ↑', sortProperty: SortPropertyEnum.PRICE_DESC },
+    { name: 'цене ↓', sortProperty: SortPropertyEnum.PRICE_ASC },
+    { name: 'алфавиту ↑', sortProperty: SortPropertyEnum.TITLE_DESC },
+    { name: 'алфавиту ↓', sortProperty: SortPropertyEnum.TITLE_ASC }
 ]
 
-const Sort: React.FC = () => {
+const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
     const dispatch = useDispatch()
-    const sort = useSelector(selectSort)
     const sortRef = React.useRef<HTMLDivElement>(null)
 
     const [visibleSort, setVisibleSort] = React.useState(false)
@@ -29,8 +33,11 @@ const Sort: React.FC = () => {
     }
 
     React.useEffect(() => {
-        const handleClickOutside = (event: any) => {
-            if (!event.composedPath().includes(sortRef.current)) {
+        const handleClickOutside = (event: MouseEvent) => {
+            const _event = event as MouseEvent & {
+                path: Node[]
+            }
+            if (sortRef.current && !_event.composedPath().includes(sortRef.current)) {
                 setVisibleSort(false)
             }
         }
@@ -55,13 +62,13 @@ const Sort: React.FC = () => {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={() => setVisibleSort(!visibleSort)}>{sort.name}</span>
+                <span onClick={() => setVisibleSort(!visibleSort)}>{value.name}</span>
             </div>
             {visibleSort && (
                 <div className='sort__popup'>
                     <ul>
                         {sortOptions.map((sortObj, index) => (
-                            <li onClick={() => selectedSort(sortObj)} key={index} className={sortObj.sortProperty === sort.sortProperty ? 'active' : ''}>
+                            <li onClick={() => selectedSort(sortObj)} key={index} className={sortObj.sortProperty === value.sortProperty ? 'active' : ''}>
                                 {sortObj.name}
                             </li>
                         ))}
@@ -70,6 +77,6 @@ const Sort: React.FC = () => {
             )}
         </div>
     )
-}
+})
 
-export default Sort
+export default SortPopup

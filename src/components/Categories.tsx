@@ -1,17 +1,21 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+// import { useWhyDidYouUpdate } from 'ahooks'
+
+import { setSearchValue, setCategoryId } from '../redux/filter/slice'
 
 type CategoriesProps = {
     value: number
-    onClickCategory: any
-    onChangeCategory: any
 }
 
-const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory, onChangeCategory }) => {
-    const categoriesList = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
+const categoriesList = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
+const Categories: React.FC<CategoriesProps> = React.memo(({ value }) => {
+    // useWhyDidYouUpdate('Categories', { value })
+    const dispatch = useDispatch()
 
     const onClickCategoryHandler = (index: number) => {
-        onClickCategory(index)
-        onChangeCategory()
+        dispatch(setCategoryId(index))
+        dispatch(setSearchValue(''))
     }
 
     return (
@@ -25,6 +29,6 @@ const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory, onChang
             </ul>
         </div>
     )
-}
+})
 
 export default Categories

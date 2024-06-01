@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import CartItem from '../components/CartItem/CartItem'
-import { clearItems, selectCart } from '../redux/slices/cartSlice'
+import { clearItems } from '../redux/cart/slice'
 import CartEmpty from '../components/CartEmpty/CartEmpty'
+import { selectCart } from '../redux/cart/selector'
 
 const Cart: React.FC = () => {
     const dispatch = useDispatch()
@@ -77,8 +78,9 @@ const Cart: React.FC = () => {
                 </div>
             </div>
             <div className='content__items'>
-                {items.map((item: any) => (
-                    <CartItem key={item.id} {...item} {...totalPrice} {...totalCount} />
+                {items.map(item => (
+                    // console.log(item)
+                    <CartItem key={item.id} {...item} {...(totalPrice as {})} {...(totalCount as {})} />
                 ))}
             </div>
             <div className='cart__bottom'>
