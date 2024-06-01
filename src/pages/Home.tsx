@@ -1,31 +1,20 @@
 import React from 'react'
-import qs from 'qs'
-import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import { pageSize, useAppDispatch } from '../redux/store'
+import { useAppDispatch } from '../redux/store'
 
-import { setPageCount } from '../redux/filter/slice'
 import { selectFilter } from '../redux/filter/selector'
 import { fetchPizzas } from '../redux/pizza/slice'
 import { selectPizzaData } from '../redux/pizza/selector'
-import { fetchOffset, selectOffset } from '../redux/slices/offsetSlice'
 
-import { Categories, SortPopup, PizzaBlock, Skeleton, Pagination } from '../components/index'
-
-let tempCount = 0
+import { Categories, SortPopup, PizzaBlock, Skeleton } from '../components/index'
 
 const Home: React.FC = () => {
-    const navigate = useNavigate()
     const dispatch = useAppDispatch()
 
     const { items, status } = useSelector(selectPizzaData)
     const { categoryId, sort, pageCount, searchValue } = useSelector(selectFilter)
-    const { offset } = useSelector(selectOffset)
-    // console.log(offset)
-
     const isSearch = React.useRef(false)
-    const isMounted = React.useRef(false)
 
     const sortType = sort.sortProperty
 
@@ -34,10 +23,8 @@ const Home: React.FC = () => {
     const sortUrl = `&sort%5B0%5D%5Bfield%5D=${sortBy}&sort%5B0%5D%5Bdirection%5D=${sortOrder}`
 
     const fetchByCategoryId = `filterByFormula=%7Bcategory%7D%3D${categoryId}${sortUrl}`
-    // const idkCount = offset[3] ? 4 : 3
-    const fetchBySortAndPage = `${sortUrl}&pageSize=${pageSize}&offset=${offset[pageCount]}`
 
-    const categoryFetch = categoryId > 0 ? fetchByCategoryId : fetchBySortAndPage
+    const categoryFetch = categoryId > 0 ? fetchByCategoryId : sortUrl
 
     const getPizzas = async () => {
         dispatch(
@@ -46,36 +33,6 @@ const Home: React.FC = () => {
         )
     }
 
-    const onChangePage = (page: number) => {
-        dispatch(setPageCount(page))
-    }
-
-    // React.useEffect(() => {
-    //     while (tempCount < 3) {
-    //         tempCount++
-    //         dispatch(
-    //             // @ts-ignore
-    //             fetchOffset()
-    //         )
-    //     }
-    // }, [])
-
-    // React.useEffect(() => {
-    //     if (window.location.search) {
-    //         const params = qs.parse(window.location.search.substring(1)) as unknown as SearchPizzaParams
-    //         const sort = sortOptions.find(obj => obj.sortProperty === params.sortBy)
-    //         console.log(params)
-    //         dispatch(
-    //             setFilters({
-    //                 searchValue: params.search,
-    //                 categoryId: Number(params.category),
-    //                 pageCount: Number(params.currentPage),
-    //                 sort: sort || sortOptions[0]
-    //             })
-    //         )
-    //         isSearch.current = true
-    //     }
-    // }, [dispatch])
     React.useEffect(() => {
         if (!isSearch.current) {
             getPizzas()
@@ -85,18 +42,6 @@ const Home: React.FC = () => {
         isSearch.current = false
         window.scrollTo(0, 0)
     }, [categoryId, sortType, searchValue, pageCount])
-
-    // React.useEffect(() => {
-    //     if (isMounted.current) {
-    //         const queryString = qs.stringify({
-    //             sortProperty: sort.sortProperty,
-    //             categoryId,
-    //             pageCount
-    //         })
-    //         navigate(`?${queryString}`)
-    //     }
-    //     isMounted.current = true
-    // }, [categoryId, sort.sortProperty, pageCount, navigate])
 
     const skeletons = [...new Array(4)].map((_, index) => (
         <li key={index}>
@@ -115,7 +60,6 @@ const Home: React.FC = () => {
             </div>
             <h2 className='content__title'>Все пиццы</h2>
             <div className='content__items'>{status === 'success' ? pizzas : skeletons}</div>
-            <Pagination onChangePage={onChangePage} />
         </>
     )
 }
