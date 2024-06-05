@@ -10,7 +10,12 @@ const FullPizza: React.FC = () => {
         title: string
         price: number
     }>()
-
+    //  Следующий код мог быть задан как начальное состояние стейта
+    //     {
+    //     imageUrl: '',
+    //     title: '',
+    //     price: 0
+    // }
     const { id } = useParams()
     const navigate = useNavigate()
 
