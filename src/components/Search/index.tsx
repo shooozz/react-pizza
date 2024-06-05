@@ -16,6 +16,7 @@ const Search: React.FC = () => {
     const inputRef = React.useRef<HTMLInputElement>(null)
 
     const onClickClear = (event: React.MouseEvent<SVGSVGElement>) => {
+        console.log(event)
         dispatch(setSearchValue(''))
         dispatch(setCategoryId(0))
         // document.querySelector('input').focus()
